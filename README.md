@@ -4,6 +4,10 @@
 
 Contract by Goldmember#0001 (Discord)
 
+[Discord](discord.gg/lyke-island)
+
+[Twitter](https://twitter.com/LykeIsland)
+
 ## The contract
 
 Simple bespoke contract, leveraging OpenZeppelin's ERC721. 
