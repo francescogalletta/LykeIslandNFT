@@ -56,6 +56,10 @@ contract LykeIslandNFT is ERC721, Ownable {
     using Counters for Counters.Counter;
     Counters.Counter private _nextTokenId;
 
+    // URI and toggle
+    string public baseURI;
+    bool public isURIlocked = false;
+
     // prices and supply
     // [TODO] Review with Ash
     uint256 public price = 0.833 ether;
@@ -78,10 +82,9 @@ contract LykeIslandNFT is ERC721, Ownable {
     uint256 public allowlistSize;
 
     // team and community wallets for reserve mint
-    // [TODO] test this with test addresses in Remix, create set functions for them
     address public devWallet = 0x5056F17776CD4682B8961C8AC26C0b420009B6c7;
     address public foundersWallet = 0xBdD93FA3ff5AfF250650a1E3622B224bD74BD2E5;
-    address public communityWallet = 0xBdD93FA3ff5AfF250650a1E3622B224bD74BD2E5; // [TODO] change this to the real one
+    address public communityWallet = 0xBdD93FA3ff5AfF250650a1E3622B224bD74BD2E5;
 
     // [TODO] delete, temp for remix testing
     function setDevWallet(address _newDev) public onlyOwner {
@@ -97,18 +100,36 @@ contract LykeIslandNFT is ERC721, Ownable {
     }
     // [TODO] delete above
 
-    function addToAllowlist(address _allowlistEntry) public onlyOwner {
-        require(allowlistSize < allowlistMintSupply, "LYKE: can not add more to allowlist");
-        allowlistMintAllowance[_allowlistEntry] = mintPerAllowlistAddress;
-    }
-
-    constructor() ERC721("LykeIsland", "LYKEISLAND") {
+    constructor(
+        string memory _uri // i.e. https://77.7.777/
+    ) ERC721("LykeIsland", "LYKEISLAND") {
         require(maxSupply == allowlistMintSupply + reservedMintSupply, "LYKE: constructor supplies dont add up");
-        require(price > 0, "LYKE: Constructor price can't be 0");
+        require(price > 0, "LYKE: constructor price can't be 0");
 
         _nextTokenId.increment();
 
-        _baseURI("88.888.88.888");
+        baseURI = _uri;
+    }
+
+    function addToAllowlist(address[] memory _allowlistEntries) external onlyOwner {
+        require(_allowlistEntries.length + allowlistSize <= allowlistMintSupply, "LYKE: can not add this many to allowlist");
+        for (uint256 i = 0; i < _allowlistEntries.length; i++) {
+            allowlistMintAllowance[_allowlistEntries[i]] = mintPerAllowlistAddress;
+            allowlistSize++;
+        }
+    }
+
+    function _baseURI() internal view override returns (string memory) {
+        return baseURI;
+    }
+
+    function setBaseURI(string calldata uri) external onlyOwner {
+        require(!isURIlocked, "LYKE: URI is locked now, can not be changed");
+        baseURI = uri;
+    }
+
+    function toggleURIlock() external onlyOwner {
+        isURIlocked = !isURIlocked;
     }
 
     // generic mint function, iterate over amount and safeMints to same target
@@ -116,6 +137,7 @@ contract LykeIslandNFT is ERC721, Ownable {
         require(_amount + _nextTokenId.current() <= maxSupply);
         for (uint256 i = 0; i < _amount; i++) {
             _safeMint(_to, _nextTokenId.current());
+            
             _nextTokenId.increment();
         }
     }
