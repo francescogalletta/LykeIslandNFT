@@ -86,20 +86,6 @@ contract LykeIslandNFT is ERC721, Ownable {
     address public foundersWallet = 0xBdD93FA3ff5AfF250650a1E3622B224bD74BD2E5;
     address public communityWallet = 0xBdD93FA3ff5AfF250650a1E3622B224bD74BD2E5;
 
-    // [TODO] delete, temp for remix testing
-    function setDevWallet(address _newDev) public onlyOwner {
-        devWallet = _newDev;
-    }
-
-    function setFoundersWallet(address _newFounders) public onlyOwner {
-        foundersWallet = _newFounders;
-    }
-
-    function setCommunityWallet(address _newCommunity) public onlyOwner {
-        communityWallet = _newCommunity;
-    }
-    // [TODO] delete above
-
     constructor(
         string memory _uri // i.e. https://77.7.777/
     ) ERC721("LykeIsland", "LYKEISLAND") {
