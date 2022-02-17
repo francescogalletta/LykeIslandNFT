@@ -60,7 +60,7 @@ contract LykeIslandNFT is ERC721, Ownable {
     string public baseURI;
 
     // prices and supply
-    uint256 public price = 0.833 ether;
+    uint256 public price = 0.06 ether;
     uint256 public constant maxSupply = 120;
     uint256 public constant allowlistMintSupply = 112;
     uint256 public constant reservedMintSupply = 8;
