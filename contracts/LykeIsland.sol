@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// written by Goldmember@0001
+// written by Goldmember#0001
 
 //MMMMMMMMMMMMMMMMMMMMNXNMMMMMMMMMMMMMMWWMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
 //MMMMMMMMMMMMMMMMMMMWd':0MMMMMMMMMMMMNdc0MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
@@ -60,7 +60,6 @@ contract LykeIslandNFT is ERC721, Ownable {
     string public baseURI;
 
     // prices and supply
-    // [TODO] Review with Ash
     uint256 public price = 0.833 ether;
     uint256 public constant maxSupply = 120;
     uint256 public constant allowlistMintSupply = 112;
@@ -75,7 +74,6 @@ contract LykeIslandNFT is ERC721, Ownable {
     bool public isReservedMintActive = true;
 
     // allowlist address + minted balance
-    // [TODO] review if to use merkle tree and replace allowlist map
     mapping(address => uint256) public allowlistMintAllowance;
     uint256 public allowlistSize;
 
