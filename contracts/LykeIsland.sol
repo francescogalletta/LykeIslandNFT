@@ -109,9 +109,12 @@ contract LykeIslandNFT is ERC721, Ownable {
 
     // generic mint function, iterate over amount and safeMints to same target
     function _mintUnits(address _to, uint256 _amount) private {
-        require(_amount + _nextTokenId.current() <= maxSupply);
+        uint256 _currentId = _nextTokenId.current();
+
+        require(_amount + _currentId <= maxSupply);
+
         for (uint256 i = 0; i < _amount; i++) {
-            _safeMint(_to, _nextTokenId.current());
+            _safeMint(_to, _currentId);
             
             _nextTokenId.increment();
         }
@@ -141,7 +144,6 @@ contract LykeIslandNFT is ERC721, Ownable {
     // no amount parameter as it is a max of 1 per wallet
     function allowlistMint() external payable {
         require(isAllowlistMintActive, "LYKE: allowlist mint is not active");
-        require(msg.sender == tx.origin, "LYKE: minter can not be a contract");
         require(allowlistMintAllowance[msg.sender] >= mintPerAllowlistAddress, "LYKE: not in allowlist or max minted");
         require(msg.value >= price , "LYKE: insufficient amount paid to mint");
 
