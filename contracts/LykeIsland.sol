@@ -89,8 +89,6 @@ contract LykeIslandNFT is ERC721, Ownable {
     constructor(
         string memory _uri // i.e. https://77.7.777/
     ) ERC721("LykeIsland", "LYKEISLAND") {
-        require(maxSupply == allowlistMintSupply + reservedMintSupply, "LYKE: constructor supplies dont add up");
-        require(price > 0, "LYKE: constructor price can't be 0");
 
         _nextTokenId.increment();
 
