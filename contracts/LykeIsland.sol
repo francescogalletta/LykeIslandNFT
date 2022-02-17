@@ -56,9 +56,8 @@ contract LykeIslandNFT is ERC721, Ownable {
     using Counters for Counters.Counter;
     Counters.Counter private _nextTokenId;
 
-    // URI and toggle
+    // URI
     string public baseURI;
-    bool public isURIlocked = false;
 
     // prices and supply
     // [TODO] Review with Ash
@@ -72,7 +71,6 @@ contract LykeIslandNFT is ERC721, Ownable {
     uint256 public constant mintsForCommunity = 5;
 
     // sales constants
-    // [TODO] consider doing a timed sale versus toggling
     bool public isAllowlistMintActive = false;
     bool public isReservedMintActive = true;
 
@@ -108,12 +106,7 @@ contract LykeIslandNFT is ERC721, Ownable {
     }
 
     function setBaseURI(string calldata uri) external onlyOwner {
-        require(!isURIlocked, "LYKE: URI is locked now, can not be changed");
         baseURI = uri;
-    }
-
-    function toggleURIlock() external onlyOwner {
-        isURIlocked = !isURIlocked;
     }
 
     // generic mint function, iterate over amount and safeMints to same target
