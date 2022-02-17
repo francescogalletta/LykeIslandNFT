@@ -109,12 +109,9 @@ contract LykeIslandNFT is ERC721, Ownable {
 
     // generic mint function, iterate over amount and safeMints to same target
     function _mintUnits(address _to, uint256 _amount) private {
-        uint256 _currentId = _nextTokenId.current();
-
-        require(_amount + _currentId <= maxSupply);
-
+        require(_amount + _nextTokenId.current() <= maxSupply);
         for (uint256 i = 0; i < _amount; i++) {
-            _safeMint(_to, _currentId);
+            _safeMint(_to, _nextTokenId.current());
             
             _nextTokenId.increment();
         }
