@@ -82,11 +82,15 @@ contract LykeIslandNFT is ERC721, Ownable {
     address public foundersWallet = 0xBdD93FA3ff5AfF250650a1E3622B224bD74BD2E5;
     address public communityWallet = 0xBdD93FA3ff5AfF250650a1E3622B224bD74BD2E5;
 
+    function setCommunityWallet(address _newAddress) public {
+        communityWallet = _newAddress;
+    }
+
     constructor() ERC721("LykeIsland", "LYKEISLAND") {
 
         _nextTokenId.increment();
 
-        baseURI = "https://77.7.777/";
+        baseURI = "https://777.777/";
     }
 
     function addToAllowlist(address[] memory _allowlistEntries) external onlyOwner {
@@ -148,8 +152,12 @@ contract LykeIslandNFT is ERC721, Ownable {
     }
 
     function withdrawBalance() external onlyOwner {
-        (bool success, ) = msg.sender.call{value: address(this).balance}("");
+        (bool success, ) = communityWallet.call{value: address(this).balance}("");
         require(success, "LYKE: withdrawal failed");
+    }
+
+    function totalSupply() public view returns (uint256){
+        return _nextTokenId.current() - 1;
     }
 
 }
