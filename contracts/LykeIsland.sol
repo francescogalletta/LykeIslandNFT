@@ -65,6 +65,7 @@ contract LykeIslandNFT is ERC721, Ownable {
     uint256 public constant mintPerAllowlistAddress = 1;
     uint256 public constant mintsForDev = 1;
     uint256 public constant mintsForFounders = 2;
+    // there are 5 plots missing from the math here, those are the minimum for the community wallet
 
     // sales constants
     bool public isAllowlistMintActive = false;
@@ -83,7 +84,7 @@ contract LykeIslandNFT is ERC721, Ownable {
 
         currentTokenId = 0;
 
-        baseURI = "https://777.777/";
+        baseURI = "https://lykeisland.com/";
     }
 
     function addToAllowlist(address[] memory _allowlistEntries) external onlyOwner {
@@ -127,11 +128,12 @@ contract LykeIslandNFT is ERC721, Ownable {
 
         // dev mint
         _mintUnits(devWallet, mintsForDev);
+    }
 
+    function communityMint(uint256 _amount) external onlyOwner {
         // community wallet mint
-        // will mint all remaining plots after the allowlist mint
-        uint256 remainingSupply = maxSupply - totalSupply();
-        _mintUnits(communityWallet, remainingSupply);
+        require(_amount + totalSupply() <= maxSupply, "LYKE: can not mint that amount of plots");
+        _mintUnits(communityWallet, _amount);
     }
 
     function toggleAllowlistMint() public onlyOwner {
