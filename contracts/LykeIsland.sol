@@ -53,8 +53,7 @@ import "@openzeppelin/contracts/utils/Counters.sol";
 contract LykeIslandNFT is ERC721, Ownable {
 
     // util tokens and strings
-    using Counters for Counters.Counter;
-    Counters.Counter private _nextTokenId;
+    uint256 private currentTokenId;
 
     // URI
     string public baseURI;
@@ -63,11 +62,9 @@ contract LykeIslandNFT is ERC721, Ownable {
     uint256 public price = 0.06 ether;
     uint256 public constant maxSupply = 120;
     uint256 public constant allowlistMintSupply = 112;
-    uint256 public constant reservedMintSupply = 8;
     uint256 public constant mintPerAllowlistAddress = 1;
     uint256 public constant mintsForDev = 1;
     uint256 public constant mintsForFounders = 2;
-    uint256 public constant mintsForCommunity = 5;
 
     // sales constants
     bool public isAllowlistMintActive = false;
@@ -75,26 +72,23 @@ contract LykeIslandNFT is ERC721, Ownable {
 
     // allowlist address + minted balance
     mapping(address => uint256) public allowlistMintAllowance;
-    uint256 public allowlistSize;
+    uint256 public allowlistSize = 0;
 
     // team and community wallets for reserve mint
-    address public devWallet = 0x5056F17776CD4682B8961C8AC26C0b420009B6c7;
-    address public foundersWallet = 0xBdD93FA3ff5AfF250650a1E3622B224bD74BD2E5;
-    address public communityWallet = 0xBdD93FA3ff5AfF250650a1E3622B224bD74BD2E5;
-
-    function setCommunityWallet(address _newAddress) public {
-        communityWallet = _newAddress;
-    }
+    address public devWallet = 0x6c911809740c53C519371d765096433c68d6d074;
+    address public foundersWallet = 0x785891c5EeE6E92AA473cb3C9bA1A20831FdBaD2;
+    address public communityWallet = 0xD8c706cC890Db93C7865633A1875b1FbFE1b35Da;
 
     constructor() ERC721("LykeIsland", "LYKEISLAND") {
 
-        _nextTokenId.increment();
+        currentTokenId = 0;
 
         baseURI = "https://777.777/";
     }
 
     function addToAllowlist(address[] memory _allowlistEntries) external onlyOwner {
-        require(_allowlistEntries.length + allowlistSize <= allowlistMintSupply, "LYKE: can not add this many to allowlist");
+        require(_allowlistEntries.length + allowlistSize
+            <= allowlistMintSupply, "LYKE: can not add this many to allowlist");
         for (uint256 i = 0; i < _allowlistEntries.length; i++) {
             allowlistMintAllowance[_allowlistEntries[i]] = mintPerAllowlistAddress;
             allowlistSize++;
@@ -109,13 +103,16 @@ contract LykeIslandNFT is ERC721, Ownable {
         baseURI = uri;
     }
 
+    function setCommunityWallet(address _newAddress) public {
+        communityWallet = _newAddress;
+    }
+
     // generic mint function, iterate over amount and safeMints to same target
     function _mintUnits(address _to, uint256 _amount) private {
-        require(_amount + _nextTokenId.current() <= maxSupply);
-        for (uint256 i = 0; i < _amount; i++) {
-            _safeMint(_to, _nextTokenId.current());
-            
-            _nextTokenId.increment();
+        require(_amount + currentTokenId <= maxSupply, "LYKE: can not mint this many tokens");
+        for (uint256 i = 0 ; i < _amount ; i++) {
+            currentTokenId++;
+            _safeMint( _to, currentTokenId );
         }
     }
 
@@ -128,11 +125,13 @@ contract LykeIslandNFT is ERC721, Ownable {
         // founders mint
         _mintUnits(foundersWallet, mintsForFounders);
 
-        // community wallet mint
-        _mintUnits(communityWallet, mintsForCommunity);
-
         // dev mint
         _mintUnits(devWallet, mintsForDev);
+
+        // community wallet mint
+        // will mint all remaining plots after the allowlist mint
+        uint256 remainingSupply = maxSupply - totalSupply();
+        _mintUnits(communityWallet, remainingSupply);
     }
 
     function toggleAllowlistMint() public onlyOwner {
@@ -152,12 +151,13 @@ contract LykeIslandNFT is ERC721, Ownable {
     }
 
     function withdrawBalance() external onlyOwner {
+        require(address(this).balance > 0, "LYKE: nothing to withdraw");
         (bool success, ) = communityWallet.call{value: address(this).balance}("");
         require(success, "LYKE: withdrawal failed");
     }
 
     function totalSupply() public view returns (uint256){
-        return _nextTokenId.current() - 1;
+        return currentTokenId;
     }
 
 }
