@@ -84,7 +84,7 @@ contract LykeIslandNFT is ERC721, Ownable {
 
         currentTokenId = 0;
 
-        baseURI = "https://lykeisland.com/";
+        baseURI = "ipfs://QmccJxVi9ZPYvunS44PsKmNimE7LysQZXnnowbEAP3tJ3m/";
     }
 
     function addToAllowlist(address[] memory _allowlistEntries) external onlyOwner {
