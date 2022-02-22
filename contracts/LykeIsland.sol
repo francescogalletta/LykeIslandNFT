@@ -76,9 +76,9 @@ contract LykeIslandNFT is ERC721, Ownable {
     uint256 public allowlistSize = 0;
 
     // team and community wallets for reserve mint
-    address public devWallet = 0x6c911809740c53C519371d765096433c68d6d074;
-    address public foundersWallet = 0x785891c5EeE6E92AA473cb3C9bA1A20831FdBaD2;
-    address public communityWallet = 0xD8c706cC890Db93C7865633A1875b1FbFE1b35Da;
+    address public devWallet = 0x5056F17776CD4682B8961C8AC26C0b420009B6c7;
+    address public foundersWallet = 0xBdD93FA3ff5AfF250650a1E3622B224bD74BD2E5;
+    address public communityWallet = 0x9b8dC77FE4E9eC716C8B66a5e20AECE6E323bC5C;
 
     constructor() ERC721("LykeIsland", "LYKEISLAND") {
 
