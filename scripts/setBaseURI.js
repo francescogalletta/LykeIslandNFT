@@ -49,4 +49,4 @@ async function setBaseURI(_newURI) {
         })
 }
 
-setBaseURI("ipfs://QmccJxVi9ZPYvunS44PsKmNimE7LysQZXnnowbEAP3tJ3m");
+setBaseURI("ipfs://QmNgok3VHReTAD1hw1V4viKL3AcCNUbNiPH1BAgJdp22Nh/");

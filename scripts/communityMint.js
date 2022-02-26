@@ -49,5 +49,5 @@ async function communityMint(_amount) {
         })
 }
 
-communityMint(5)
+communityMint(7)
 
